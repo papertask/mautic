@@ -1,0 +1,4 @@
+INFO: loading config from /etc/shadowsocks.json
+ERROR: found an error in config.json: Expecting property name enclosed in double quotes: line 2 column 39 (char 40)
+INFO: loading config from /etc/shadowsocks.json
+ERROR: found an error in config.json: Expecting property name enclosed in double quotes: line 2 column 39 (char 40)

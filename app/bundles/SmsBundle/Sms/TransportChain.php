@@ -7,36 +7,29 @@
  *
  * @license     GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
-
 namespace Mautic\SmsBundle\Sms;
-
 use Mautic\LeadBundle\Entity\Lead;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
 use Mautic\SmsBundle\Api\AbstractSmsApi;
 use Monolog\Logger;
-
 class TransportChain
 {
     /**
      * @var AbstractSmsApi[]
      */
     private $transports;
-
     /**
      * @var string
      */
     private $primaryTransport;
-
     /**
      * @var IntegrationHelper
      */
     private $integrationHelper;
-
     /**
      * @var Logger
      */
     private $logger;
-
     /**
      * TransportChain constructor.
      *
@@ -51,7 +44,6 @@ class TransportChain
         $this->integrationHelper = $integrationHelper;
         $this->logger            = $logger;
     }
-
     /**
      * @param                $alias
      * @param AbstractSmsApi $transport
@@ -65,10 +57,8 @@ class TransportChain
         $this->transports[$alias]['alias']            = $translatableAlias;
         $this->transports[$alias]['integrationAlias'] = $integrationAlias;
         $this->transports[$alias]['service']          = $transport;
-
         return $this;
     }
-
     /**
      * Return the transport defined in parameters.
      *
@@ -79,14 +69,11 @@ class TransportChain
     private function getPrimaryTransport()
     {
         $enabled = $this->getEnabledTransports();
-
         if (!array_key_exists($this->primaryTransport, $enabled)) {
             throw new \Exception('Primary SMS transport is not enabled. '.$this->primaryTransport);
         }
-
         return $enabled[$this->primaryTransport];
     }
-
     /**
      * @param Lead   $lead
      * @param string $content
@@ -97,16 +84,9 @@ class TransportChain
      */
     public function sendSms(Lead $lead, $content)
     {
-        $number = $lead->getLeadPhoneNumber();
-
-        $this->logger->addInfo('Sending an SMS message using '
-                            .$this->transports[$this->primaryTransport]['integrationAlias'].' to '
-                            .(is_array($number) ? join(',', $number) : $number));
-        $response = $this->getPrimaryTransport()->sendSms($number, $content);
-
+        $response = $this->getPrimaryTransport()->sendSms($lead, $content);
         return $response;
     }
-
     /**
      * Get all transports registered in service container.
      *
@@ -116,7 +96,6 @@ class TransportChain
     {
         return $this->transports;
     }
-
     /**
      * Get published transports.
      *
@@ -125,7 +104,7 @@ class TransportChain
     public function getEnabledTransports()
     {
         $enabled = [];
-        foreach ($this->transports as $alias=>$transport) {
+        foreach ($this->transports as $alias => $transport) {
             if (!isset($transport['published'])) {
                 $integration = $this->integrationHelper->getIntegrationObject($transport['integrationAlias']);
                 if (!$integration) {
@@ -138,7 +117,6 @@ class TransportChain
                 $enabled[$alias] = $transport['service'];
             }
         }
-
         return $enabled;
     }
 }

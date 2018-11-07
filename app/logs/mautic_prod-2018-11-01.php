@@ -1,0 +1,2 @@
+[2018-11-01 16:53:29] mautic.WARNING: Error accessing https://mautic.com/?feed=rss2&tag=notification : Operation timed out after 829 milliseconds with 0 bytes received [] []
+[2018-11-01 16:53:39] mautic.WARNING: PHP Warning - file_put_contents(/data/www/mautic/app/cache/prod/lastUpdateCheck.txt): failed to open stream: Permission denied - in file /data/www/mautic/app/bundles/CoreBundle/Helper/UpdateHelper.php - at line 214 [] []
